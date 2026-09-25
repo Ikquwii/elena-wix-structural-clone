@@ -18,8 +18,9 @@ grep -q 'Latest Projects' "$HTML"
 grep -q 'Barcelona | Paris' "$HTML"
 grep -q 'instagram.com/whiteusova' "$HTML"
 
-grep -q 'const PAGE_HEIGHT = 13767' "$JS"
+grep -q 'const PAGE_HEIGHT = 13634' "$JS"
 grep -q 'const PAGE_WIDTH = 1280' "$JS"
+grep -q 'const REMOVED_HEADER_HEIGHT = 133' "$JS"
 grep -q 'data-placeholder-count="85"' "$HTML"
 grep -q 'data-carousel-count="7"' "$HTML"
 
@@ -45,7 +46,7 @@ grep -q 'background: var(--paper)' "$CSS"
 grep -q -- '--track-start' "$JS"
 grep -q 'left: var(--track-start) !important' "$CSS"
 grep -q 'width: min(100vw, 1700px) !important' "$CSS"
-grep -q 'top: 2145px' "$CSS"
+grep -q 'top: 2012px' "$CSS"
 grep -q 'font-size: 54px' "$CSS"
 
 palette_count=$(sed -n '/const PALETTE = \[/,/^\];$/p' "$JS" | grep -o '#[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]' | wc -l | tr -d ' ')
@@ -69,13 +70,24 @@ grep -q 'Runways / Shows / Backstages' "$ROOT/fashion-weeks.html"
 grep -Fq 'Elena Belousova is a European fashion photographer working between Barcelona and Paris. Her images move between editorial storytelling and commercial campaigns — built on soft light, sculptural composition and a calm, self-assured femininity.' "$ROOT/about-contact.html"
 grep -q 'publication-marquee' "$HTML"
 marquee_count=$(grep -c 'class="publication-marquee-track"' "$HTML")
-test "$marquee_count" -eq 2
+test "$marquee_count" -eq 3
 grep -q 'publication-marquee-top' "$HTML"
 if grep -q 'data-publication-carousel\|publication-carousel-next\|bindPublicationCarousel' "$HTML" "$CSS" "$JS"; then
   echo 'Custom publication carousel must be replaced by the original marquee' >&2
   exit 1
 fi
 grep -q 'mobile-editorial-grid' "$HTML"
+grep -q 'class="mobile-publication-marquee"' "$HTML"
+grep -q 'class="mobile-section-index"' "$HTML"
+test "$(sed -n '/class="mobile-section-index"/,/<\/nav>/p' "$HTML" | grep -c '<a href=')" -eq 4
+if grep -q 'class="site-nav"\|class="mobile-nav"\|mobile-menu-button\|id="mobile-menu"' "$HTML"; then
+  echo 'Top navigation plaque still exists' >&2
+  exit 1
+fi
+if grep -q 'mobileMenuButton\|mobileMenu' "$JS"; then
+  echo 'Removed mobile menu JavaScript still exists' >&2
+  exit 1
+fi
 
 for contact in 'tel:' 'mailto:' 'instagram.com'; do
   if grep -q "$contact" "$ROOT/about-contact.html"; then

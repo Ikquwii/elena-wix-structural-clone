@@ -1,6 +1,7 @@
 const PAGE_WIDTH = 1280;
-const PAGE_HEIGHT = 13767;
+const PAGE_HEIGHT = 13634;
 const MAIN_CONTENT_OFFSET = 100;
+const REMOVED_HEADER_HEIGHT = 133;
 const INFINITE_COPIES = 3;
 
 const PALETTE = [
@@ -74,7 +75,8 @@ function renderPlaceholders() {
     const slot = document.createElement("div");
     slot.className = "placeholder";
     slot.style.left = `${x}px`;
-    slot.style.top = `${y >= 1441 ? y + MAIN_CONTENT_OFFSET : y}px`;
+    const baseTop = y >= 1441 ? y + MAIN_CONTENT_OFFSET : y;
+    slot.style.top = `${baseTop - REMOVED_HEADER_HEIGHT}px`;
     slot.style.width = `${width}px`;
     slot.style.height = `${height}px`;
     slot.style.backgroundColor = index === 0 ? PALETTE[0] : PALETTE[(index % (PALETTE.length - 1)) + 1];
@@ -165,7 +167,7 @@ function renderCarousels() {
   CAROUSELS.forEach((config, carouselIndex) => {
     const carousel = document.createElement("section");
     carousel.className = "carousel";
-    carousel.style.top = `${config.y + MAIN_CONTENT_OFFSET}px`;
+    carousel.style.top = `${config.y + MAIN_CONTENT_OFFSET - REMOVED_HEADER_HEIGHT}px`;
     carousel.style.height = `${config.height}px`;
     carousel.setAttribute("aria-label", `Portfolio carousel ${carouselIndex + 1}`);
     carousel.dataset.carousel = String(carouselIndex + 1);
@@ -222,14 +224,3 @@ renderPlaceholders();
 renderCarousels();
 scaleCanvas();
 window.addEventListener("resize", scaleCanvas, { passive: true });
-
-const mobileMenuButton = document.querySelector(".mobile-menu-button");
-const mobileMenu = document.querySelector("#mobile-menu");
-
-if (mobileMenuButton && mobileMenu) {
-  mobileMenuButton.addEventListener("click", () => {
-    const isOpen = mobileMenuButton.getAttribute("aria-expanded") === "true";
-    mobileMenuButton.setAttribute("aria-expanded", String(!isOpen));
-    mobileMenu.classList.toggle("is-open", !isOpen);
-  });
-}

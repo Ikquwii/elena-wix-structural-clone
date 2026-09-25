@@ -10,15 +10,6 @@
 <body>
   <div class="viewport" id="viewport">
     <main class="canvas" id="canvas" data-placeholder-count="85" data-carousel-count="7" aria-label="Elena Belousova portfolio structural clone">
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a class="site-wordmark" href="index.html" aria-current="page">Elena Belousova</a>
-        <div class="site-nav-links">
-          <a href="commercial.html">Commercial Projects &amp; Collections</a>
-          <a href="editorials.html">Editorials &amp; Publications</a>
-          <a href="fashion-weeks.html">Fashion Weeks Runways / Shows / Backstages</a>
-          <a href="about-contact.html">About &amp; Contact</a>
-        </div>
-      </nav>
       <div class="band band-hero" aria-hidden="true"></div>
       <div class="band band-intro" aria-hidden="true"></div>
       <div class="band band-gray" aria-hidden="true"></div>
@@ -86,17 +77,6 @@
   </div>
 
   <main class="mobile-site" aria-label="Elena Belousova mobile portfolio">
-    <nav class="mobile-nav" aria-label="Mobile navigation">
-      <a href="index.html" aria-current="page">Elena Belousova</a>
-      <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
-      <div class="mobile-menu" id="mobile-menu">
-        <a href="commercial.html">Commercial</a>
-        <a href="editorials.html">Editorials</a>
-        <a href="fashion-weeks.html">Fashion Weeks</a>
-        <a href="about-contact.html">About</a>
-      </div>
-    </nav>
-
     <section class="mobile-hero">
       <div class="mobile-photo tone-dark" role="img" aria-label="Hero photography placeholder"></div>
       <div class="mobile-hero-copy"><h1>ELENA BELOUSOVA</h1><p>Portfolio</p></div>
@@ -108,9 +88,19 @@
       <p>This portfolio includes work for magazines including VOGUE, Harper’s BAZAAR, ELLE, L’OFFICIEL, GLAMOUR, GRAZIA, SHAPE and BLVD.</p>
     </section>
 
-    <div class="mobile-brands" aria-label="Featured publications">
-      <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span>
+    <div class="mobile-publication-marquee" aria-label="Featured publications">
+      <div class="publication-marquee-track">
+        <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
+        <span aria-hidden="true">Vogue</span><span aria-hidden="true">Harper’s Bazaar</span><span aria-hidden="true">Elle</span><span aria-hidden="true">L’Officiel</span><span aria-hidden="true">Glamour</span><span aria-hidden="true">Grazia</span><span aria-hidden="true">Shape</span><span aria-hidden="true">BLVD</span>
+      </div>
     </div>
+
+    <nav class="mobile-section-index" aria-label="Portfolio sections">
+      <a href="commercial.html">Commercial</a>
+      <a href="editorials.html">Editorials</a>
+      <a href="fashion-weeks.html">Fashion Weeks</a>
+      <a href="about-contact.html">About</a>
+    </nav>
 
     <section class="mobile-section">
       <h2>Fashion Weeks</h2>
