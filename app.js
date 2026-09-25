@@ -63,7 +63,6 @@ const CAROUSEL_RANGES = [
 
 const canvas = document.querySelector("#canvas");
 const viewport = document.querySelector("#viewport");
-const publicationCarousel = document.querySelector("[data-publication-carousel]");
 
 function renderPlaceholders() {
   const fragment = document.createDocumentFragment();
@@ -213,65 +212,6 @@ function renderCarousels() {
   canvas.prepend(fragment);
 }
 
-function bindPublicationCarousel() {
-  if (!publicationCarousel) return;
-
-  const track = publicationCarousel.querySelector(".publication-carousel-track");
-  const set = publicationCarousel.querySelector(".publication-carousel-set");
-  const button = publicationCarousel.querySelector(".publication-carousel-next");
-  if (!track || !set || !button) return;
-
-  const cycleWidth = set.getBoundingClientRect().width || PAGE_WIDTH;
-  let currentPosition = 0;
-  let targetPosition = 0;
-  let animationFrame = 0;
-
-  function paint() {
-    track.style.transform = `translate3d(${-cycleWidth - currentPosition}px, 0, 0)`;
-    publicationCarousel.dataset.activeOffset = String(Math.round(normalizeCarouselPosition(currentPosition, cycleWidth)));
-  }
-
-  function animate() {
-    const difference = targetPosition - currentPosition;
-    currentPosition += difference * 0.18;
-
-    if (Math.abs(difference) < 0.35) currentPosition = targetPosition;
-
-    if (currentPosition >= cycleWidth || currentPosition < 0) {
-      const normalized = normalizeCarouselPosition(currentPosition, cycleWidth);
-      const completedCycles = currentPosition - normalized;
-      currentPosition = normalized;
-      targetPosition -= completedCycles;
-    }
-
-    paint();
-
-    if (currentPosition !== targetPosition) {
-      animationFrame = requestAnimationFrame(animate);
-    } else {
-      animationFrame = 0;
-    }
-  }
-
-  function moveBy(distance) {
-    targetPosition += distance;
-    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
-  }
-
-  publicationCarousel.addEventListener("wheel", (event) => {
-    const horizontalIntent = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-    const distance = horizontalIntent ? event.deltaX : event.shiftKey ? event.deltaY : 0;
-    if (!distance) return;
-
-    event.preventDefault();
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? PAGE_WIDTH : 1;
-    moveBy(distance * unit);
-  }, { passive: false });
-
-  button.addEventListener("click", () => moveBy(260));
-  paint();
-}
-
 function scaleCanvas() {
   const scale = Math.min(1, window.innerWidth / PAGE_WIDTH);
   document.documentElement.style.setProperty("--scale", String(scale));
@@ -280,7 +220,6 @@ function scaleCanvas() {
 
 renderPlaceholders();
 renderCarousels();
-bindPublicationCarousel();
 scaleCanvas();
 window.addEventListener("resize", scaleCanvas, { passive: true });
 

@@ -68,11 +68,13 @@ grep -q 'Editorials &amp; Publications' "$ROOT/editorials.html"
 grep -q 'Runways / Shows / Backstages' "$ROOT/fashion-weeks.html"
 grep -Fq 'Elena Belousova is a European fashion photographer working between Barcelona and Paris. Her images move between editorial storytelling and commercial campaigns — built on soft light, sculptural composition and a calm, self-assured femininity.' "$ROOT/about-contact.html"
 grep -q 'publication-marquee' "$HTML"
-grep -q 'data-publication-carousel' "$HTML"
-grep -q 'publication-carousel-track' "$HTML"
-grep -q 'bindPublicationCarousel' "$JS"
-grep -q 'publicationCarousel.addEventListener("wheel"' "$JS"
-grep -q 'publication-carousel-next' "$CSS"
+marquee_count=$(grep -c 'class="publication-marquee-track"' "$HTML")
+test "$marquee_count" -eq 2
+grep -q 'publication-marquee-top' "$HTML"
+if grep -q 'data-publication-carousel\|publication-carousel-next\|bindPublicationCarousel' "$HTML" "$CSS" "$JS"; then
+  echo 'Custom publication carousel must be replaced by the original marquee' >&2
+  exit 1
+fi
 grep -q 'mobile-editorial-grid' "$HTML"
 
 for contact in 'tel:' 'mailto:' 'instagram.com'; do

@@ -167,7 +167,6 @@ body {
 .intro-copy,
 .section-title,
 .latest-copy,
-.brand-row,
 .publication-marquee,
 .contact-strip {
   position: absolute;
@@ -323,76 +322,6 @@ body {
   background: #fbfbfa;
 }
 
-.brand-row {
-  left: 0;
-  width: 1280px;
-  height: 86px;
-  overflow: hidden;
-  overscroll-behavior-inline: contain;
-  color: #202225;
-  font-family: var(--serif);
-  font-size: 22px;
-  white-space: nowrap;
-}
-
-.brand-row-top {
-  top: 1325px;
-  border-bottom: 1px solid #c9cbcc;
-}
-
-.publication-carousel-track {
-  display: flex;
-  width: max-content;
-  height: 100%;
-  will-change: transform;
-}
-
-.publication-carousel-set {
-  display: flex;
-  flex: 0 0 1280px;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  width: 1280px;
-  height: 100%;
-  padding: 0 40px;
-}
-
-.publication-carousel-next {
-  position: absolute;
-  top: 50%;
-  right: 18px;
-  z-index: 3;
-  display: grid;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-  place-items: center;
-  border: 1px solid #d1d3d2;
-  border-radius: 50%;
-  background: rgb(251 251 250 / 94%);
-  color: #202225;
-  cursor: pointer;
-  transform: translateY(-50%);
-}
-
-.publication-carousel-next::before {
-  content: "→";
-  font-family: var(--sans);
-  font-size: 23px;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.publication-carousel-next:active {
-  transform: translateY(-50%) scale(.96);
-}
-
-.publication-carousel-next:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-}
-
 .publication-marquee {
   top: 13345px;
   left: 0;
@@ -403,6 +332,13 @@ body {
   border-bottom: 1px solid #bfc1c2;
   background: #111315;
   color: #f3f3f0;
+}
+
+.publication-marquee-top {
+  top: 1325px;
+  border-top: 0;
+  background: #fbfbfa;
+  color: #202225;
 }
 
 .publication-marquee-track {
