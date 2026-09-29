@@ -1,226 +1,302 @@
-const PAGE_WIDTH = 1280;
-const PAGE_HEIGHT = 13634;
-const MAIN_CONTENT_OFFSET = 100;
-const REMOVED_HEADER_HEIGHT = 133;
-const INFINITE_COPIES = 3;
-
-const PALETTE = [
-  "#343a3f",
-  "#b9bec2",
-  "#c9c4c0",
-  "#aeb6ba",
-  "#d7d8d6",
-  "#969da1",
-  "#c5c9c6",
-  "#aaa5a2",
-  "#dfe0dd",
-  "#7d868b",
-  "#cbc7c4",
-  "#b3b9bc"
-];
-
-const PLACEHOLDERS = [
-  [0,133,1280,822],
-  [-77,1441,391,521],[324,1441,391,521],[725,1441,391,521],[1126,1441,391,521],
-  [5,2162,442,589],[467,2162,442,589],[929,2162,442,589],
-  [-63,2783,354,472],[301,2783,354,472],[665,2783,354,472],[1029,2783,354,472],[1393,2783,354,472],
-  [-64,3290,354,472],[300,3290,354,472],[664,3290,354,472],[1028,3290,354,472],
-  [-64,3793,309,464],[255,3793,309,464],[574,3793,309,464],[893,3793,331,464],[1234,3793,331,464],
-  [-29,4283,354,472],[335,4283,354,472],[699,4283,354,472],[1063,4283,354,472],
-  [40,4790,442,589],[502,4790,442,589],[964,4790,442,589],
-  [40,5419,442,589],[502,5419,442,589],[964,5419,442,589],
-  [40,6548,442,589],[502,6548,442,589],[964,6548,442,589],
-  [-29,7174,354,472],[335,7174,354,472],[699,7174,354,472],[1063,7174,354,472],[1427,7174,354,472],
-  [40,7687,285,285],[345,7687,590,590],[40,7992,285,285],
-  [40,8338,563,447],[623,8338,617,447],
-  [40,8805,1200,669],
-  [0,10384,335,502],[340,10384,149,299],[494,10384,198,299],
-  [40,11178,373,299],[453,11178,374,561],[867,11178,373,249],
-  [40,11497,373,470],[453,11759,374,300],[867,11447,373,520],
-  [40,11987,373,300],[453,12079,374,500],[867,11987,373,300],
-  [40,12307,373,540],[453,12599,374,320],[867,12307,373,470],
-  [40,12867,373,300],[453,12939,374,260],[867,12797,373,400]
-];
-
-const CAROUSELS = [
-  { y: 1441, height: 521, startX: -77, widths: [391], gap: 10, count: 14, visible: 4 },
-  { y: 2162, height: 589, startX: 5, widths: [442], gap: 20, count: 14, visible: 3 },
-  { y: 2783, height: 472, startX: -63, widths: [354], gap: 10, count: 5, visible: 4 },
-  { y: 3290, height: 472, startX: -64, widths: [354], gap: 10, count: 4, visible: 4 },
-  { y: 3793, height: 464, startX: -64, widths: [309,309,309,331,331], gap: 10, count: 5, visible: 5 },
-  { y: 4283, height: 472, startX: -29, widths: [354], gap: 10, count: 4, visible: 4 },
-  { y: 7174, height: 472, startX: -29, widths: [354], gap: 10, count: 5, visible: 4 }
-];
-
-const CAROUSEL_RANGES = [
-  [1,4],
-  [5,7],
-  [8,12],
-  [13,16],
-  [17,21],
-  [22,25],
-  [35,39]
-];
-
-const canvas = document.querySelector("#canvas");
-const viewport = document.querySelector("#viewport");
-
-function renderPlaceholders() {
-  const fragment = document.createDocumentFragment();
-
-  PLACEHOLDERS.forEach(([x, y, width, height], index) => {
-    const belongsToCarousel = CAROUSEL_RANGES.some(([start, end]) => index >= start && index <= end);
-    if (belongsToCarousel) return;
-
-    const slot = document.createElement("div");
-    slot.className = "placeholder";
-    slot.style.left = `${x}px`;
-    const baseTop = y >= 1441 ? y + MAIN_CONTENT_OFFSET : y;
-    slot.style.top = `${baseTop - REMOVED_HEADER_HEIGHT}px`;
-    slot.style.width = `${width}px`;
-    slot.style.height = `${height}px`;
-    slot.style.backgroundColor = index === 0 ? PALETTE[0] : PALETTE[(index % (PALETTE.length - 1)) + 1];
-    slot.setAttribute("role", "img");
-    slot.setAttribute("aria-label", `Photography placeholder ${index + 1}`);
-    slot.dataset.slot = String(index + 1).padStart(2, "0");
-    fragment.appendChild(slot);
-  });
-
-  canvas.prepend(fragment);
-}
-
-function carouselCycleWidth(config) {
-  let width = 0;
-  for (let item = 0; item < config.count; item += 1) {
-    width += config.widths[item % config.widths.length] + config.gap;
-  }
-  return width;
-}
-
-function normalizeCarouselPosition(position, cycleWidth) {
-  return ((position % cycleWidth) + cycleWidth) % cycleWidth;
-}
-
-function bindInfiniteCarousel(carousel, track, button, config) {
-  const cycleWidth = carouselCycleWidth(config);
-  let currentPosition = 0;
-  let targetPosition = 0;
-  let buttonIndex = 0;
-  let animationFrame = 0;
-
-  function paint() {
-    track.style.transform = `translate3d(${-cycleWidth - currentPosition}px, 0, 0)`;
-    carousel.dataset.activeOffset = String(Math.round(normalizeCarouselPosition(currentPosition, cycleWidth)));
+(() => {
+  'use strict';
+  history.scrollRestoration = 'manual';
+  const data = window.PORTFOLIO_DATA;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = window.matchMedia('(max-width: 700px)');
+  const labels = { fashion: 'Fashion Weeks', commercial: 'Commercial Projects & Collections', editorials: 'Editorials & Publications' };
+  const status = document.querySelector('#copy-status');
+  let statusTimer;
+  function announce(message) {
+    clearTimeout(statusTimer);
+    status.textContent = message;
+    statusTimer = setTimeout(() => { status.textContent = ''; }, 4500);
   }
 
-  function animate() {
-    const difference = targetPosition - currentPosition;
-    currentPosition += difference * 0.18;
-
-    if (Math.abs(difference) < 0.35) {
-      currentPosition = targetPosition;
-    }
-
-    if (currentPosition >= cycleWidth || currentPosition < 0) {
-      const normalized = normalizeCarouselPosition(currentPosition, cycleWidth);
-      const completedCycles = currentPosition - normalized;
-      currentPosition = normalized;
-      targetPosition -= completedCycles;
-    }
-
-    paint();
-
-    if (currentPosition !== targetPosition) {
-      animationFrame = requestAnimationFrame(animate);
+  function makePhoto(photo, index, group, label, project = false) {
+    const frame = document.createElement(project ? 'a' : 'button');
+    frame.className = 'photo-frame';
+    frame.dataset.photoId = photo.id;
+    if (project) {
+      frame.href = photo.href;
+      frame.target = '_blank';
+      frame.rel = 'noopener noreferrer';
+      frame.setAttribute('aria-label', `${photo.title} — view project (opens in a new tab)`);
     } else {
-      animationFrame = 0;
+      frame.type = 'button';
+      frame.setAttribute('aria-label', `View ${label}, photograph ${index + 1}`);
+      frame.setAttribute('aria-haspopup', 'dialog');
+      frame.addEventListener('click', () => openViewer(group, index, frame, label));
     }
+    if (photo.available === false) {
+      frame.classList.add('unavailable-photo');
+      frame.setAttribute('aria-label', 'Photograph unavailable in the source portfolio');
+      frame.textContent = 'Image currently unavailable';
+      if (!project) frame.disabled = true;
+      return frame;
+    }
+    const image = document.createElement('img');
+    image.src = photo.src;
+    image.alt = project ? photo.title : photo.title || `${label} — photograph ${index + 1}`;
+    image.width = photo.downloadedWidth || photo.width;
+    image.height = photo.downloadedHeight || photo.height;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    if (photo.focalPoint) image.style.objectPosition = `${photo.focalPoint[0]*100}% ${photo.focalPoint[1]*100}%`;
+    image.addEventListener('error', () => {
+      frame.classList.add('unavailable-photo');
+      image.hidden = true;
+      const message = document.createElement('span');
+      message.textContent = 'Image could not be loaded';
+      frame.append(message);
+    }, { once: true });
+    frame.append(image);
+    if (project) {
+      const caption = document.createElement('span');
+      caption.className = 'project-caption';
+      caption.textContent = photo.title;
+      frame.append(caption);
+    }
+    return frame;
   }
 
-  function moveBy(distance) {
-    targetPosition += distance;
-    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
-  }
-
-  carousel.addEventListener("wheel", (event) => {
-    const horizontalIntent = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-    const distance = horizontalIntent ? event.deltaX : event.shiftKey ? event.deltaY : 0;
-    if (!distance) return;
-
-    event.preventDefault();
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? PAGE_WIDTH : 1;
-    moveBy(distance * unit);
-  }, { passive: false });
-
-  button.addEventListener("click", () => {
-    const itemWidth = config.widths[buttonIndex % config.widths.length];
-    buttonIndex = (buttonIndex + 1) % config.count;
-    moveBy(itemWidth + config.gap);
-  });
-
-  paint();
-}
-
-function renderCarousels() {
-  const fragment = document.createDocumentFragment();
-
-  CAROUSELS.forEach((config, carouselIndex) => {
-    const carousel = document.createElement("section");
-    carousel.className = "carousel";
-    carousel.style.top = `${config.y + MAIN_CONTENT_OFFSET - REMOVED_HEADER_HEIGHT}px`;
-    carousel.style.height = `${config.height}px`;
-    carousel.setAttribute("aria-label", `Portfolio carousel ${carouselIndex + 1}`);
-    carousel.dataset.carousel = String(carouselIndex + 1);
-    carousel.dataset.activeIndex = "0";
-
-    const track = document.createElement("div");
-    track.className = "carousel-track";
-    track.style.left = `${config.startX}px`;
-    track.style.setProperty("--track-start", `${config.startX}px`);
-    track.style.height = `${config.height}px`;
-    track.style.gap = `${config.gap}px`;
-
-    for (let copyIndex = 0; copyIndex < INFINITE_COPIES; copyIndex += 1) {
-      for (let itemIndex = 0; itemIndex < config.count; itemIndex += 1) {
-        const item = document.createElement("div");
-        item.className = "placeholder carousel-item";
-        item.style.width = `${config.widths[itemIndex % config.widths.length]}px`;
-        item.style.height = `${config.height}px`;
-        item.style.backgroundColor = PALETTE[((carouselIndex * 3 + itemIndex) % (PALETTE.length - 1)) + 1];
-
-        if (copyIndex === 1) {
-          item.setAttribute("role", "img");
-          item.setAttribute("aria-label", `Carousel ${carouselIndex + 1}, photography placeholder ${itemIndex + 1}`);
-          item.dataset.carouselItem = String(itemIndex + 1);
-        } else {
-          item.setAttribute("aria-hidden", "true");
-          item.dataset.carouselClone = String(copyIndex);
-        }
-
-        track.appendChild(item);
+  function addControls(shell, viewport, label, step, initialOffset = 0) {
+    const controls = document.createElement('div');
+    controls.className = 'row-controls';
+    const previous = document.createElement('button');
+    const next = document.createElement('button');
+    previous.type = next.type = 'button';
+    previous.className = 'row-arrow row-previous';
+    next.className = 'row-arrow row-next';
+    previous.textContent = '‹';
+    next.textContent = '›';
+    previous.setAttribute('aria-label', `Previous photographs — ${label}`);
+    next.setAttribute('aria-label', `Next photographs — ${label}`);
+    controls.append(previous, next);
+    shell.append(controls);
+    viewport.tabIndex = 0;
+    viewport.setAttribute('role', 'region');
+    viewport.setAttribute('aria-label', `${label}. Scroll horizontally to view all photographs.`);
+    const minimum = () => mobile.matches ? 0 : initialOffset;
+    const maximum = () => Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+    const sync = () => {
+      previous.disabled = viewport.scrollLeft <= minimum() + 1;
+      next.disabled = viewport.scrollLeft >= maximum() - 1;
+      controls.hidden = maximum() < 2;
+    };
+    const move = direction => viewport.scrollTo({ left: Math.max(minimum(), Math.min(maximum(), viewport.scrollLeft + direction * step())), behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+    previous.addEventListener('click', () => move(-1));
+    next.addEventListener('click', () => move(1));
+    viewport.addEventListener('scroll', sync, { passive: true });
+    viewport.addEventListener('keydown', event => {
+      if (event.target !== viewport) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        move(event.key === 'ArrowRight' ? 1 : -1);
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        viewport.scrollTo({ left: event.key === 'Home' ? minimum() : maximum(), behavior: 'instant' });
       }
-    }
+    });
+    // Trackpad scrolling is native. Shift+wheel also works with a mouse.
+    viewport.addEventListener('wheel', event => {
+      if (!event.shiftKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientWidth : 1;
+      const delta = event.deltaY * unit;
+      if (delta > 0 ? viewport.scrollLeft < maximum() - 1 : viewport.scrollLeft > 1) {
+        event.preventDefault();
+        viewport.scrollLeft += delta;
+      }
+    }, { passive: false });
+    if (initialOffset && !mobile.matches) viewport.scrollLeft = initialOffset;
+    new ResizeObserver(sync).observe(viewport);
+    sync();
+  }
 
-    const button = document.createElement("button");
-    button.className = "carousel-next";
-    button.type = "button";
-    button.setAttribute("aria-label", "Next Item");
-
-    carousel.append(track, button);
-    bindInfiniteCarousel(carousel, track, button, config);
-    fragment.appendChild(carousel);
+  data.rows.forEach((row, rowIndex) => {
+    const section = document.querySelector(`#${row.section}-gallery`);
+    const shell = document.createElement('div');
+    shell.className = `photo-row${row.gray ? ' gray-row' : ''}`;
+    shell.dataset.gallery = row.id;
+    shell.dataset.photoCount = row.items.length;
+    shell.style.setProperty('--row-height', `${row.height}px`);
+    shell.style.setProperty('--row-gap', `${row.gap}px`);
+    shell.style.setProperty('--row-before', `${row.before}px`);
+    shell.style.setProperty('--row-inset', `${Math.max(0, row.start)}px`);
+    const viewport = document.createElement('div');
+    viewport.className = 'row-viewport';
+    const strip = document.createElement('div');
+    strip.className = 'row-strip';
+    row.items.forEach((photo, index) => {
+      const frame = makePhoto(photo, index, row.items, labels[row.section]);
+      frame.style.setProperty('--frame-width', `${photo.frameWidth}px`);
+      frame.style.setProperty('--frame-ratio', photo.frameWidth / photo.frameHeight);
+      strip.append(frame);
+    });
+    viewport.append(strip);
+    shell.append(viewport);
+    section.append(shell);
+    addControls(shell, viewport, `${labels[row.section]}, row ${rowIndex + 1}`, () =>
+      strip.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(strip).gap), Math.max(0, -row.start));
   });
 
-  canvas.prepend(fragment);
-}
+  data.layouts.forEach(layout => {
+    const shell = document.createElement('div');
+    shell.className = `measured-layout ${layout.kind}`;
+    shell.dataset.gallery = layout.id;
+    shell.dataset.photoCount = layout.items.length;
+    shell.style.setProperty('--layout-before', `${layout.before}px`);
+    const viewport = document.createElement('div');
+    viewport.className = 'layout-viewport';
+    const board = document.createElement('div');
+    board.className = 'layout-board';
+    board.style.setProperty('--board-width', layout.width);
+    board.style.setProperty('--board-height', layout.height);
+    layout.items.forEach((photo, index) => {
+      const frame = makePhoto(photo, index, layout.items, labels.editorials);
+      const [x, y, width, height] = photo.frame;
+      Object.assign(frame.style, { left: `${x/layout.width*100}%`, top: `${y/layout.height*100}%`, width: `${width/layout.width*100}%`, height: `${height/layout.height*100}%` });
+      board.append(frame);
+    });
+    viewport.append(board);
+    shell.append(viewport);
+    document.querySelector('#editorials-gallery').append(shell);
+    if (layout.kind === 'mixed') addControls(shell, viewport, 'Editorials & Publications, final row', () => viewport.clientWidth * .75);
+  });
 
-function scaleCanvas() {
-  const scale = Math.min(1, window.innerWidth / PAGE_WIDTH);
-  document.documentElement.style.setProperty("--scale", String(scale));
-  viewport.style.height = `${Math.ceil(PAGE_HEIGHT * scale)}px`;
-}
+  const latestBoard = document.createElement('div');
+  latestBoard.className = 'latest-board';
+  data.latest.forEach((photo, index) => {
+    const card = makePhoto(photo, index, data.latest, 'Latest Projects', true);
+    const [x, y, width, height] = photo.frame;
+    card.style.setProperty('--card-x', `${x/1200*100}%`);
+    card.style.setProperty('--card-y', `${y/1884*100}%`);
+    card.style.setProperty('--card-w', `${width/1200*100}%`);
+    card.style.setProperty('--card-h', `${height/1884*100}%`);
+    card.style.setProperty('--card-ratio', width/height);
+    latestBoard.append(card);
+  });
+  const latestSlider = document.createElement('div');
+  latestSlider.className = 'latest-slider';
+  latestSlider.append(latestBoard);
+  document.querySelector('#latest-gallery').append(latestSlider);
+  const latestStep = () => latestBoard.firstElementChild.getBoundingClientRect().width + 16;
+  addControls(latestSlider, latestBoard, 'Latest Projects', latestStep);
+  let latestFrame = 0;
+  function sizeLatestSlide() {
+    if (!mobile.matches) {
+      latestBoard.style.removeProperty('height');
+      return;
+    }
+    const index = Math.min(data.latest.length - 1, Math.round(latestBoard.scrollLeft / latestStep()));
+    const card = latestBoard.children[index];
+    const ratio = data.latest[index].frame[2] / data.latest[index].frame[3];
+    latestBoard.style.height = `${card.getBoundingClientRect().width / ratio}px`;
+  }
+  latestBoard.addEventListener('scroll', () => {
+    cancelAnimationFrame(latestFrame);
+    latestFrame = requestAnimationFrame(sizeLatestSlide);
+  }, { passive: true });
+  window.addEventListener('resize', sizeLatestSlide, { passive: true });
+  sizeLatestSlide();
 
-renderPlaceholders();
-renderCarousels();
-scaleCanvas();
-window.addEventListener("resize", scaleCanvas, { passive: true });
+  const viewer = document.createElement('dialog');
+  viewer.className = 'photo-viewer';
+  viewer.setAttribute('aria-label', 'Photograph viewer');
+  viewer.innerHTML = '<button class="viewer-close" type="button" aria-label="Close photograph viewer">×</button><button class="viewer-previous" type="button" aria-label="Previous photograph">‹</button><figure><img alt=""><figcaption></figcaption></figure><button class="viewer-next" type="button" aria-label="Next photograph">›</button>';
+  document.body.append(viewer);
+  let viewerPhotos = [], viewerIndex = 0, viewerTrigger, viewerLabel;
+  const viewerImage = viewer.querySelector('img');
+  const viewerCaption = viewer.querySelector('figcaption');
+  const viewerPrevious = viewer.querySelector('.viewer-previous');
+  const viewerNext = viewer.querySelector('.viewer-next');
+  function showViewerPhoto() {
+    const photo = viewerPhotos[viewerIndex];
+    viewerImage.src = photo.src;
+    viewerImage.alt = photo.title || `${viewerLabel} — photograph ${viewerIndex + 1}`;
+    viewerCaption.textContent = `${viewerLabel} · ${viewerIndex + 1} / ${viewerPhotos.length}`;
+    viewerPrevious.disabled = viewerIndex === 0;
+    viewerNext.disabled = viewerIndex === viewerPhotos.length - 1;
+  }
+  function openViewer(photos, index, trigger, label) {
+    viewerPhotos = photos.filter(photo => photo.available !== false);
+    viewerIndex = viewerPhotos.findIndex(photo => photo.id === photos[index].id);
+    if (viewerIndex < 0) return;
+    viewerTrigger = trigger;
+    viewerLabel = label;
+    showViewerPhoto();
+    viewer.showModal();
+    document.body.classList.add('viewer-open');
+    viewer.querySelector('.viewer-close').focus();
+  }
+  function navigateViewer(direction) {
+    viewerIndex = Math.max(0, Math.min(viewerPhotos.length-1, viewerIndex+direction));
+    showViewerPhoto();
+  }
+  viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
+  viewerPrevious.addEventListener('click', () => navigateViewer(-1));
+  viewerNext.addEventListener('click', () => navigateViewer(1));
+  viewer.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigateViewer(event.key === 'ArrowLeft' ? -1 : 1);
+    }
+  });
+  viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
+  viewer.addEventListener('close', () => {
+    document.body.classList.remove('viewer-open');
+    viewerTrigger?.focus({ preventScroll: true });
+  });
+
+  document.querySelectorAll('[data-copy-section]').forEach(button => {
+    button.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg>';
+    button.addEventListener('click', async () => {
+    const url = new URL(window.location.href);
+    url.hash = button.dataset.copySection;
+    try {
+      await navigator.clipboard.writeText(url.href);
+      announce('Section link copied');
+    } catch {
+      // A selected field keeps sharing usable when clipboard access is denied.
+      const field = document.createElement('input');
+      field.type = 'text';
+      field.value = url.href;
+      field.className = 'manual-copy-link';
+      field.setAttribute('aria-label', 'Section link — select and copy');
+      button.parentElement.append(field);
+      field.focus();
+      field.select();
+      field.addEventListener('blur', () => field.remove(), { once: true });
+      announce('Copy this selected link');
+    }
+    });
+  });
+
+  document.querySelectorAll('.publication-marquee').forEach(band => {
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'marquee-toggle';
+    toggle.textContent = 'Ⅱ';
+    toggle.setAttribute('aria-label', 'Pause publication strip');
+    toggle.setAttribute('aria-pressed', 'false');
+    toggle.addEventListener('click', () => {
+      const paused = band.classList.toggle('is-paused');
+      toggle.textContent = paused ? '▷' : 'Ⅱ';
+      toggle.setAttribute('aria-label', paused ? 'Play publication strip' : 'Pause publication strip');
+      toggle.setAttribute('aria-pressed', String(paused));
+    });
+    band.append(toggle);
+  });
+
+  async function restoreAnchor() {
+    await document.fonts.ready;
+    if (window.location.hash) {
+      // All public section IDs are plain ASCII; malformed fragments stay harmless.
+      const target = document.getElementById(window.location.hash.slice(1));
+      target?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+  }
+  window.addEventListener('pageshow', restoreAnchor);
+  window.addEventListener('hashchange', restoreAnchor);
+  restoreAnchor();
+})();

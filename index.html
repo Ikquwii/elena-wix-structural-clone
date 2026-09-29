@@ -5,133 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Elena Belousova, European fashion photographer working between Barcelona and Paris.">
   <title>Elena Belousova | Fashion Photographer</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shell.css">
+  <link rel="stylesheet" href="gallery.css">
+  <script src="gallery-data.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <div class="viewport" id="viewport">
-    <main class="canvas" id="canvas" data-placeholder-count="85" data-carousel-count="7" aria-label="Elena Belousova portfolio structural clone">
-      <div class="band band-hero" aria-hidden="true"></div>
-      <div class="band band-intro" aria-hidden="true"></div>
-      <div class="band band-gray" aria-hidden="true"></div>
-      <div class="band band-soft" aria-hidden="true"></div>
-
-      <header class="hero-copy">
-        <h1>ELENA BELOUSOVA</h1>
-        <p>Portfolio</p>
-      </header>
-
-      <section class="intro-copy" aria-labelledby="intro-title">
-        <div>
-          <h2 id="intro-title">Elena<br>Belousova</h2>
-          <p class="profession">European Fashion Photographer</p>
-        </div>
+  <a class="skip-link" href="#section-index">Skip to portfolio sections</a>
+  <main id="portfolio">
+    <header class="hero" aria-labelledby="portfolio-title">
+      <img id="hero-image" src="assets/hero.webp" alt="Fashion photograph from Elena Belousova’s portfolio" fetchpriority="high">
+      <div class="hero-copy">
+        <h1 id="portfolio-title">ELENA BELOUSOVA</h1>
+        <p class="portfolio-label">Portfolio</p>
         <p class="publications">This portfolio includes work for magazines including VOGUE, Harper’s BAZAAR, ELLE, L’OFFICIEL, GLAMOUR, GRAZIA, SHAPE and BLVD.</p>
-      </section>
-
-      <div class="publication-marquee publication-marquee-top" aria-label="Featured publications">
-        <div class="publication-marquee-track">
-          <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
-          <span aria-hidden="true">Vogue</span><span aria-hidden="true">Harper’s Bazaar</span><span aria-hidden="true">Elle</span><span aria-hidden="true">L’Officiel</span><span aria-hidden="true">Glamour</span><span aria-hidden="true">Grazia</span><span aria-hidden="true">Shape</span><span aria-hidden="true">BLVD</span>
-        </div>
       </div>
+    </header>
 
-      <section class="section-title fashion-title" aria-labelledby="fashion-weeks-title">
-        <h2 id="fashion-weeks-title">Fashion Weeks</h2>
-      </section>
-
-      <section class="section-title editorial-title" aria-labelledby="editorials-title">
-        <h2 id="editorials-title">Latest Projects &amp; Fashion Editorials</h2>
-      </section>
-
-      <section class="latest-copy" aria-labelledby="latest-projects-title">
-        <h2 id="latest-projects-title">Latest Projects</h2>
-        <p>Here you can check out my latest commercial projects</p>
-      </section>
-
-      <div class="publication-marquee" aria-label="Selected publications">
-        <div class="publication-marquee-track">
-          <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
-          <span aria-hidden="true">Vogue</span><span aria-hidden="true">Harper’s Bazaar</span><span aria-hidden="true">Elle</span><span aria-hidden="true">L’Officiel</span><span aria-hidden="true">Glamour</span><span aria-hidden="true">Grazia</span><span aria-hidden="true">Shape</span><span aria-hidden="true">BLVD</span>
-        </div>
-      </div>
-
-      <footer class="contact-strip" aria-label="Contact information">
-        <div class="contact-item">
-          <span class="contact-mark">01</span>
-          <span>Barcelona | Paris</span>
-        </div>
-        <a class="contact-item" href="tel:+34608418933">
-          <span class="contact-mark">02</span>
-          <span>+34 608 41 89 33</span>
-        </a>
-        <a class="contact-item" href="mailto:elenawhiteusova@gmail.com">
-          <span class="contact-mark">03</span>
-          <span>elenawhiteusova@gmail.com</span>
-        </a>
-        <a class="contact-item" href="https://instagram.com/whiteusova" target="_blank" rel="noreferrer">
-          <span class="contact-mark">04</span>
-          <span>Instagram</span>
-        </a>
-      </footer>
-    </main>
-  </div>
-
-  <main class="mobile-site" aria-label="Elena Belousova mobile portfolio">
-    <section class="mobile-hero">
-      <div class="mobile-photo tone-dark" role="img" aria-label="Hero photography placeholder"></div>
-      <div class="mobile-hero-copy"><h1>ELENA BELOUSOVA</h1><p>Portfolio</p></div>
-    </section>
-
-    <section class="mobile-intro">
-      <h2>Elena Belousova</h2>
-      <p>European Fashion Photographer</p>
-      <p>This portfolio includes work for magazines including VOGUE, Harper’s BAZAAR, ELLE, L’OFFICIEL, GLAMOUR, GRAZIA, SHAPE and BLVD.</p>
-    </section>
-
-    <div class="mobile-publication-marquee" aria-label="Featured publications">
-      <div class="publication-marquee-track">
+    <div class="publication-marquee publication-marquee-top" role="group" aria-label="Vogue, Harper’s Bazaar, Elle, L’Officiel, Glamour, Grazia, Shape, BLVD">
+      <div class="publication-marquee-track" aria-hidden="true">
         <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
-        <span aria-hidden="true">Vogue</span><span aria-hidden="true">Harper’s Bazaar</span><span aria-hidden="true">Elle</span><span aria-hidden="true">L’Officiel</span><span aria-hidden="true">Glamour</span><span aria-hidden="true">Grazia</span><span aria-hidden="true">Shape</span><span aria-hidden="true">BLVD</span>
+        <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
       </div>
     </div>
 
-    <nav class="mobile-section-index" aria-label="Portfolio sections">
-      <a href="commercial.html">Commercial</a>
-      <a href="editorials.html">Editorials</a>
-      <a href="fashion-weeks.html">Fashion Weeks</a>
-      <a href="about-contact.html">About</a>
+    <nav id="section-index" class="section-index" aria-label="Portfolio sections" tabindex="-1">
+      <a href="#commercial">Commercial Projects &amp; Collections</a>
+      <a href="#fashion-weeks">Fashion weeks runways/shows/backstages</a>
+      <a href="#editorials">Editorials &amp; Publications</a>
+      <a href="#about-contact">About &amp; Contact</a>
     </nav>
 
-    <section class="mobile-section">
-      <h2>Fashion Weeks</h2>
-      <div class="mobile-scroll" aria-label="Fashion Weeks photography">
-        <div class="mobile-photo portrait tone-1"></div><div class="mobile-photo portrait tone-2"></div><div class="mobile-photo portrait tone-3"></div><div class="mobile-photo portrait tone-4"></div>
-      </div>
+    <section id="fashion-weeks" class="portfolio-section" aria-labelledby="fashion-weeks-title">
+      <header class="section-heading">
+        <h2 id="fashion-weeks-title">Fashion Weeks</h2>
+        <button class="copy-link" type="button" data-copy-section="fashion-weeks" aria-label="Copy link to Fashion Weeks"><span aria-hidden="true">↗</span></button>
+      </header>
+      <div id="fashion-gallery"></div>
     </section>
 
-    <section class="mobile-section mobile-editorials">
-      <h2>Latest Projects &amp;<br>Fashion Editorials</h2>
-      <div class="mobile-editorial-grid">
-        <div class="mobile-photo editorial-a tone-2"></div><div class="mobile-photo editorial-b tone-4"></div><div class="mobile-photo editorial-c tone-1"></div><div class="mobile-photo editorial-d tone-3"></div><div class="mobile-photo editorial-e tone-5"></div>
-      </div>
+    <section id="commercial" class="portfolio-section" aria-labelledby="commercial-title">
+      <header class="section-heading">
+        <h2 id="commercial-title">Commercial Projects &amp; Collections</h2>
+        <button class="copy-link" type="button" data-copy-section="commercial" aria-label="Copy link to Commercial Projects and Collections"><span aria-hidden="true">↗</span></button>
+      </header>
+      <div id="commercial-gallery"></div>
     </section>
 
-    <section class="mobile-section mobile-latest">
-      <h2>Latest Projects</h2>
-      <p>Here you can check out my latest commercial projects</p>
-      <div class="mobile-project-grid">
-        <div class="mobile-photo project-a tone-3"></div><div class="mobile-photo project-b tone-1"></div><div class="mobile-photo project-c tone-4"></div><div class="mobile-photo project-d tone-2"></div>
-      </div>
+    <section id="editorials" class="portfolio-section" aria-labelledby="editorials-title">
+      <header class="section-heading">
+        <h2 id="editorials-title">Editorials &amp; Publications</h2>
+        <button class="copy-link" type="button" data-copy-section="editorials" aria-label="Copy link to Editorials and Publications"><span aria-hidden="true">↗</span></button>
+        <p>Vogue, Glamour, L’officiel</p>
+      </header>
+      <div id="editorials-gallery"></div>
     </section>
 
-    <section class="mobile-contact" aria-label="Contact information">
-      <h2>Contact</h2>
-      <a href="tel:+34608418933">+34 608 41 89 33</a>
-      <a href="https://instagram.com/whiteusova" target="_blank" rel="noreferrer">Instagram</a>
-      <a href="mailto:elenawhiteusova@gmail.com">elenawhiteusova@gmail.com</a>
-      <p>Barcelona | Paris</p>
+    <section id="latest-projects" class="portfolio-section" aria-labelledby="latest-projects-title">
+      <header class="section-heading">
+        <h2 id="latest-projects-title">Latest Projects</h2>
+        <button class="copy-link" type="button" data-copy-section="latest-projects" aria-label="Copy link to Latest Projects"><span aria-hidden="true">↗</span></button>
+        <p>Here you can check out my latest commercial projects.</p>
+      </header>
+      <div id="latest-gallery"></div>
+    </section>
+
+    <div class="publication-marquee" role="group" aria-label="Vogue, Harper’s Bazaar, Elle, L’Officiel, Glamour, Grazia, Shape, BLVD">
+      <div class="publication-marquee-track" aria-hidden="true">
+        <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
+        <span>Vogue</span><span>Harper’s Bazaar</span><span>Elle</span><span>L’Officiel</span><span>Glamour</span><span>Grazia</span><span>Shape</span><span>BLVD</span>
+      </div>
+    </div>
+
+    <section id="about-contact" class="about-contact" aria-labelledby="about-title">
+      <button class="copy-link about-copy-link" type="button" data-copy-section="about-contact" aria-label="Copy link to About and Contact">↗</button>
+      <div class="about-grid">
+        <h2 id="about-title">LET’S CREATE<br>SOMETHING ICONIC.</h2>
+        <div class="about-portrait" role="img" aria-label="Portrait placeholder"></div>
+        <p class="about-bio">Elena Belousova is a European fashion photographer working between Barcelona and Paris. Her images move between editorial storytelling and commercial campaigns — built on soft light, sculptural composition and a calm, self-assured femininity.</p>
+      </div>
+      <footer class="contact-grid" aria-label="Contact information">
+        <div class="contact-item"><span class="contact-label">Based in</span><span>Barcelona | Paris</span></div>
+        <a class="contact-item" href="tel:+34608418933"><span class="contact-label">Phone</span><span>+34 608 41 89 33</span></a>
+        <a class="contact-item" href="https://www.instagram.com/whiteusova?igsh=MWltODNhNGRyeWJucQ==" target="_blank" rel="noopener noreferrer"><span class="contact-label">Instagram</span><span>@whiteusova</span></a>
+        <a class="contact-item" href="mailto:elenawhiteusova@gmail.com"><span class="contact-label">Email</span><span>elenawhiteusova@gmail.com</span></a>
+      </footer>
     </section>
   </main>
-  <script src="app.js"></script>
+  <p id="copy-status" class="copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </body>
 </html>

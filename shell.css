@@ -1,0 +1,86 @@
+@font-face { font-family: "Cormorant Garamond Light"; src: url("fonts/cormorant-garamond-light.woff2") format("woff2"); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("fonts/cormorant-garamond-regular.woff2") format("woff2"); font-style: normal; font-weight: 400; font-display: swap; }
+
+:root {
+  --serif: "Cormorant Garamond Light", "Times New Roman", serif;
+  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ink: #111214;
+  --paper: #fbfbfa;
+  --accent: #3156d9;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: auto; }
+body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+a { color: inherit; }
+button { font: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+section, nav { scroll-margin-top: 24px; }
+.skip-link { position: fixed; top: 12px; left: 12px; z-index: 20; padding: 12px 18px; background: var(--paper); transform: translateY(-180%); }
+.skip-link:focus { transform: translateY(0); }
+
+.hero { position: relative; isolation: isolate; width: 100%; aspect-ratio: 1280 / 822; background: #2d3338; color: #f7f7f5; }
+#hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.hero-copy { position: absolute; left: 50%; top: 72.6277%; width: min(90%, 850px); transform: translateX(-50%); text-align: center; }
+.hero-copy h1 { margin: 0; font-family: var(--serif); font-size: clamp(36px, 5.46875vw, 88px); font-weight: 400; line-height: .98; letter-spacing: 0; }
+.portfolio-label { margin: 10px 0 0; font-family: var(--serif); font-size: clamp(30px, 3.59375vw, 58px); line-height: 1; }
+.publications { max-width: 640px; margin: 24px auto 0; font-size: clamp(12px, 1.15vw, 17px); font-weight: 300; line-height: 1.5; text-wrap: pretty; }
+
+.publication-marquee { width: 100%; overflow: hidden; padding: 22px 0; border-block: 1px solid #05080c; background: #05080c; color: #f3f3f0; }
+.publication-marquee-track { display: flex; align-items: center; width: max-content; animation: publication-loop 34s linear infinite; }
+.publication-marquee span { display: flex; align-items: center; flex: 0 0 auto; gap: clamp(22px, 3vw, 50px); padding: 0 clamp(22px, 3vw, 50px); font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(24px, 3vw, 42px); font-weight: 400; white-space: nowrap; }
+.publication-marquee span::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #2f54dd; flex: none; }
+.publication-marquee:hover .publication-marquee-track { animation-play-state: paused; }
+@keyframes publication-loop { to { transform: translateX(-50%); } }
+
+.section-index { padding: 46px clamp(20px, 5vw, 80px) 64px; }
+.section-index a { display: block; padding: 19px 0; border-bottom: 1px solid #c3c4c4; font-family: var(--serif); font-size: clamp(22px, 2.65vw, 38px); text-decoration: none; }
+.section-index a:first-child { border-top: 1px solid #c3c4c4; }
+.section-index a:hover { color: var(--accent); }
+.section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; padding: 50px 24px 38px; text-align: center; }
+.section-heading h2 { margin: 0; max-width: calc(100% - 48px); font-family: var(--serif); font-size: clamp(32px, 4.375vw, 64px); font-weight: 400; line-height: 1.08; }
+#latest-projects .section-heading h2 { font-size: clamp(34px, 4.6875vw, 68px); }
+.section-heading p { flex-basis: 100%; margin: 4px 0 0; font-size: 16px; line-height: 1.5; }
+.copy-link { display: inline-grid; flex: 0 0 36px; width: 36px; height: 36px; padding: 0; place-items: center; border: 1px solid #bfc1c2; border-radius: 50%; background: transparent; color: #414448; cursor: pointer; font-size: 20px; }
+.copy-link:hover { background: #e9eaea; }
+.copy-status { position: fixed; bottom: 20px; left: 50%; z-index: 30; max-width: calc(100% - 40px); margin: 0; padding: 12px 20px; transform: translateX(-50%); background: var(--ink); color: white; font-size: 14px; }
+.copy-status:empty { padding: 0; }
+
+.about-contact { padding: 76px clamp(24px, 4vw, 72px) 0; background: #181a1b; color: #f1f1ed; }
+.about-grid { display: grid; grid-template-columns: 1.1fr .8fr 1fr; align-items: center; gap: clamp(28px, 4vw, 72px); max-width: 1500px; margin-inline: auto; }
+.about-grid h2 { margin: 0; font-size: clamp(20px, 2.55vw, 42px); font-weight: 700; line-height: 1.12; letter-spacing: -.045em; text-align: center; white-space: nowrap; }
+.about-portrait { width: 100%; aspect-ratio: 3 / 4; background: #a6a6a2; }
+.about-bio { margin: 0; font-size: clamp(15px, 1.3vw, 20px); font-weight: 300; line-height: 1.65; }
+.contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1500px; margin: 66px auto 0; padding: 30px 0 38px; border-top: 1px solid #535658; }
+.contact-item { display: flex; flex-direction: column; gap: 11px; font-size: 14px; line-height: 1.5; text-decoration: none; overflow-wrap: anywhere; }
+.contact-label { color: #c3c5c5; font-size: 12px; }
+a.contact-item:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+@media (min-width: 701px) and (max-width: 1000px) {
+  .hero-copy { top: auto; bottom: 4%; }
+}
+
+@media (max-width: 700px) {
+  .hero { min-height: 560px; aspect-ratio: 3 / 4; }
+  .hero-copy { top: auto; bottom: 7%; width: 90%; }
+  .hero-copy h1 { font-size: clamp(32px, 7.4vw, 50px); }
+  .publications { max-width: 390px; margin-top: 20px; font-size: 12px; }
+  .section-index { padding-top: 30px; padding-bottom: 32px; }
+  .section-index a { padding: 17px 0; font-size: 23px; }
+  .section-heading { padding: 36px 18px 28px; gap: 8px; }
+  .section-heading h2 { font-size: 34px; }
+  .section-heading p { font-size: 14px; }
+  .about-contact { padding-top: 46px; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .about-grid h2 { font-size: clamp(26px, 6.4vw, 42px); }
+  .about-portrait { max-width: 350px; margin-inline: auto; }
+  .about-bio { max-width: 480px; margin-inline: auto; font-size: 16px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 25px; margin-top: 38px; }
+  .contact-item { gap: 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .publication-marquee-track { animation: none; }
+  *, *::before, *::after { transition-duration: 0s !important; }
+}

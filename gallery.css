@@ -1,0 +1,92 @@
+/* Source frame sizes and relative offsets are preserved at 1280px. */
+body { background: #fff; }
+.section-index { padding-top: 40px; padding-bottom: 36px; }
+.section-index a { font-family: var(--sans); font-size: 17px; padding-block: 18px; }
+.portfolio-section { overflow: clip; }
+#fashion-weeks .section-heading { padding-top: 32px; padding-bottom: 28px; }
+#commercial .section-heading { padding-top: 84px; padding-bottom: 60px; }
+#editorials .section-heading { padding-top: 76px; padding-bottom: 58px; }
+#latest-projects .section-heading { justify-content: flex-start; text-align: left; padding: 82px 40px 76px; }
+#latest-projects .section-heading p { margin-top: 28px; }
+.photo-row { position: relative; margin-top: var(--row-before); }
+.row-viewport { margin-inline: var(--row-inset); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; overscroll-behavior-x: contain; }
+.row-viewport::-webkit-scrollbar, .layout-viewport::-webkit-scrollbar, .latest-board::-webkit-scrollbar { display: none; }
+.row-strip { display: flex; gap: var(--row-gap); height: var(--row-height); width: max-content; }
+.photo-frame { position: relative; display: block; margin: 0; padding: 0; overflow: hidden; border: 0; border-radius: 0; background: #e5e4e1; color: #383b3d; text-decoration: none; cursor: pointer; }
+.row-strip .photo-frame { flex: 0 0 var(--frame-width); width: var(--frame-width); height: 100%; }
+.photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+@media (hover: hover) { .photo-frame:hover img { transform: scale(1.025); } }
+.photo-frame:focus-visible { outline-offset: -4px; }
+.row-controls { position: absolute; inset: 0; pointer-events: none; }
+.row-controls[hidden] { display: none; }
+.row-arrow { position: absolute; top: 50%; width: 42px; height: 54px; padding: 0 0 5px; display: grid; place-items: center; border: 0; border-radius: 0; background: rgb(255 255 255 / .88); color: #1c2023; font-family: Arial, sans-serif; font-size: 36px; font-weight: 300; transform: translateY(-50%); cursor: pointer; pointer-events: auto; }
+.row-previous { left: max(14px, var(--row-inset, 0px)); }
+.row-next { right: max(14px, var(--row-inset, 0px)); }
+.row-arrow:disabled { visibility: hidden; pointer-events: none; }
+.gray-row { padding-block: 18px; margin-top: 22px; background: #999; }
+.unavailable-photo { display: grid; place-items: center; padding: 20px; font: 13px/1.5 var(--sans); text-align: center; }
+.measured-layout { position: relative; margin-top: var(--layout-before); margin-inline: 40px; }
+.layout-board { position: relative; width: 100%; aspect-ratio: var(--board-width) / var(--board-height); }
+.layout-board .photo-frame { position: absolute; }
+.mixed { margin-inline: 0; }
+.mixed .layout-viewport { overflow: auto hidden; scrollbar-width: none; overscroll-behavior-x: contain; }
+.mixed .layout-board { width: calc(var(--board-width) * 1px); height: calc(var(--board-height) * 1px); aspect-ratio: auto; }
+#latest-gallery { padding: 0 40px 80px; }
+.latest-slider { position: relative; }
+.latest-board { position: relative; width: 100%; aspect-ratio: 1200 / 1884; }
+.latest-board .photo-frame { position: absolute; left: var(--card-x); top: var(--card-y); width: var(--card-w); height: var(--card-h); }
+.project-caption { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; background: rgb(0 0 0 / .18); color: white; font: 24px/1.2 var(--serif); text-align: center; opacity: 0; transition: opacity .25s ease; }
+.photo-frame:hover .project-caption, .photo-frame:focus-visible .project-caption { opacity: 1; }
+.manual-copy-link { flex: 1 0 100%; max-width: 550px; padding: 12px; border: 1px solid #777; font: 14px var(--sans); }
+.publication-marquee { position: relative; }
+.marquee-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border: 1px solid #44494e; border-radius: 50%; background: #05080c; color: #fff; cursor: pointer; }
+.publication-marquee.is-paused .publication-marquee-track { animation-play-state: paused; }
+.about-contact { position: relative; }
+.about-copy-link { position: absolute; right: 20px; top: 20px; color: #f1f1ed; border-color: #6c7072; }
+.about-copy-link:hover { background: #383b3d; }
+.viewer-open { overflow: hidden; }
+.photo-viewer { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; padding: 55px 70px 25px; border: 0; background: rgb(10 12 14 / .97); color: #fff; }
+.photo-viewer::backdrop { background: #0a0c0e; }
+.photo-viewer[open] { display: grid; place-items: center; }
+.photo-viewer figure { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; min-height: 0; margin: 0; gap: 18px; pointer-events: none; }
+.photo-viewer img { display: block; width: 100%; height: calc(100% - 34px); object-fit: contain; }
+.photo-viewer figcaption { font: 13px/1.3 var(--sans); text-align: center; }
+.photo-viewer button { position: absolute; z-index: 1; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 0; background: transparent; color: white; font: 36px/1 Arial, sans-serif; cursor: pointer; }
+.viewer-close { right: 15px; top: 10px; }
+.viewer-previous, .viewer-next { top: calc(50% - 24px); }
+.viewer-previous { left: 10px; }
+.viewer-next { right: 10px; }
+.photo-viewer button:disabled { opacity: .2; cursor: default; }
+@media (min-width: 701px) and (max-width: 1000px) {
+  .row-strip { height: calc(var(--row-height) * .8); }
+  .row-strip .photo-frame { flex-basis: calc(var(--frame-width) * .8); width: calc(var(--frame-width) * .8); }
+}
+@media (max-width: 700px) {
+  #fashion-weeks .section-heading, #commercial .section-heading, #editorials .section-heading { padding: 40px 18px 28px; }
+  #latest-projects .section-heading { padding: 48px 20px 30px; }
+  #latest-projects .section-heading p { margin-top: 8px; }
+  .photo-row { margin-top: 20px; }
+  .photo-row:first-child { margin-top: 0; }
+  .row-viewport { margin-inline: 14px; }
+  .row-strip { height: clamp(300px, 102vw, 480px); gap: 10px; }
+  .row-strip .photo-frame { flex-basis: auto; width: auto; aspect-ratio: var(--frame-ratio); }
+  .row-arrow { width: 32px; height: 44px; font-size: 30px; }
+  .row-previous { left: 14px; }
+  .row-next { right: 14px; }
+  .gray-row { margin-top: 20px; padding-block: 14px; }
+  .measured-layout { margin-inline: 14px; margin-top: 24px; }
+  .mixed { margin-inline: 0; }
+  .mixed .layout-viewport { margin-inline: 14px; }
+  .mixed .layout-board { width: calc(var(--board-width) * .64px); height: calc(var(--board-height) * .64px); }
+  #latest-gallery { padding: 0 0 48px; }
+  .latest-board { display: flex; align-items: start; gap: 16px; width: 100%; padding-inline: 20px; aspect-ratio: auto; overflow: auto hidden; scrollbar-width: none; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+  .latest-board .photo-frame { position: relative; inset: auto; flex: 0 0 82%; width: 82%; height: auto; aspect-ratio: var(--card-ratio); scroll-snap-align: center; }
+  .project-caption { inset: auto 0 0; display: block; padding: 28px 14px 14px; background: linear-gradient(transparent, rgb(0 0 0 / .6)); font-size: 22px; }
+  .latest-slider .row-previous { left: 20px; }
+  .latest-slider .row-next { right: 20px; }
+  .photo-viewer { padding: 58px 36px 24px; }
+  .photo-viewer button { width: 34px; }
+  .viewer-previous { left: 0; }
+  .viewer-next { right: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .photo-frame img, .project-caption { transition: none; } }
