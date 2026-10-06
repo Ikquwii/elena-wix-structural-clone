@@ -7,5 +7,7 @@ PYTHON="$RUNTIME/python/bin/python3"
 if [ -z "$NODE" ]; then NODE="$RUNTIME/node/bin/node"; fi
 if [ ! -x "$PYTHON" ]; then PYTHON=$(command -v python3); fi
 "$NODE" --check "$ROOT/app.js"
+"$NODE" --check "$ROOT/image-loader.js"
+"$NODE" --test "$ROOT/tests/image-loader.test.cjs"
 "$NODE" --check "$ROOT/gallery-data.js"
 "$PYTHON" "$ROOT/tests/verify.py"

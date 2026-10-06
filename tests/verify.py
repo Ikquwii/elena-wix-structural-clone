@@ -81,7 +81,7 @@ check(len(portrait) == 1 and portrait[0].attrs.get('aria-label') == 'Portrait pl
 for sheet in ['shell.css', 'gallery.css']:
     css = (ROOT / sheet).read_text()
     check('@media (max-width: 700px)' in css and 'prefers-reduced-motion' in css, f'{sheet}: missing mobile/reduced-motion rules')
-check([s.attrs.get('src', '').split('?')[0] for s in doc.all('script')] == ['gallery-data.js', 'app.js'], 'Data must load before app')
+check([s.attrs.get('src', '').split('?')[0] for s in doc.all('script')] == ['gallery-data.js', 'image-loader.js', 'app.js'], 'Data and image loader must load before app')
 
 manifest = json.loads((ROOT / 'source-manifest.json').read_text())
 match = re.fullmatch(r'\s*window\.PORTFOLIO_DATA\s*=\s*(\{.*\})\s*;?\s*', (ROOT / 'gallery-data.js').read_text(), re.S)
