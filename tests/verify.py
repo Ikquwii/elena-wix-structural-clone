@@ -81,7 +81,7 @@ check(len(portrait) == 1 and portrait[0].attrs.get('aria-label') == 'Portrait pl
 for sheet in ['shell.css', 'gallery.css']:
     css = (ROOT / sheet).read_text()
     check('@media (max-width: 700px)' in css and 'prefers-reduced-motion' in css, f'{sheet}: missing mobile/reduced-motion rules')
-check([s.attrs.get('src') for s in doc.all('script')] == ['gallery-data.js', 'app.js'], 'Data must load before app')
+check([s.attrs.get('src', '').split('?')[0] for s in doc.all('script')] == ['gallery-data.js', 'app.js'], 'Data must load before app')
 
 manifest = json.loads((ROOT / 'source-manifest.json').read_text())
 match = re.fullmatch(r'\s*window\.PORTFOLIO_DATA\s*=\s*(\{.*\})\s*;?\s*', (ROOT / 'gallery-data.js').read_text(), re.S)
@@ -126,7 +126,7 @@ for photo in photos:
 for node in doc.all('img') + doc.all('script') + doc.all('link'):
     src = node.attrs.get('src') or node.attrs.get('href')
     if src and not src.startswith(('http:', 'https:', '#')):
-        check((ROOT / src).is_file(), f'HTML references missing local file: {src}')
+        check((ROOT / src.split('?')[0]).is_file(), f'HTML references missing local file: {src}')
 check(len(manifest['assetErrors']) == len({p['mediaUrl'] for p in missing}), 'Asset error list and unavailable items disagree')
 print(f'PASS: one main; navigation, copy, contacts, 2 bands; 13 galleries / {sum(n for _, n, _ in expected)} source-ordered photos; Latest 11; {len(checked)} unique local images decoded.')
 if missing:

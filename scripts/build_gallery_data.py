@@ -5,7 +5,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 manifest = json.loads((ROOT / "source-manifest.json").read_text())
 galleries = {g["id"]: g for g in manifest["galleries"]}
-# Rendered source at 1280px, 29 September 2026. Negative x preserves edge cropping.
+# Source gallery wrappers measured at 1280px and 1710px. Fixed-width wrappers
+# follow the centered Wix 1280px grid; fluid wrappers keep their side margins.
+fixed_viewports = {
+    "comp-m6ext3o8": 1419,
+    "comp-m71lau44": 1468,
+    "comp-m5npdged": 1419,
+    "comp-micz738a": 1419,
+    "comp-m71s2exl": 1374,
+    "comp-m71s045z": 1468,
+}
 rows = [
     ("comp-m6ext3o8", "fashion", 521, 391, 10, -77, 0),
     ("comp-m1rp6m5r", "commercial", 589, 442, 20, 5, 0),
@@ -23,6 +32,7 @@ for gid, section, height, width, gap, start, before in rows:
     items = [dict(p, frameWidth=width or round(height*p["width"]/p["height"]), frameHeight=height)
              for p in galleries[gid]["items"]]
     output["rows"].append(dict(id=gid, section=section, height=height, gap=gap, start=start,
+                               viewportWidth=fixed_viewports.get(gid),
                                before=before, gray=gid=="comp-m0q9sda7", items=items))
 layouts = [
     ("comp-m0mfxpea", "mosaic", 1200, 590, 41,
