@@ -36,20 +36,19 @@
       return frame;
     }
     const image = document.createElement('img');
-    image.src = photo.src;
     image.alt = project ? photo.title : photo.title || `${label} — photograph ${index + 1}`;
     image.width = photo.downloadedWidth || photo.width;
     image.height = photo.downloadedHeight || photo.height;
     image.loading = 'lazy';
     image.decoding = 'async';
     if (photo.focalPoint) image.style.objectPosition = `${photo.focalPoint[0]*100}% ${photo.focalPoint[1]*100}%`;
-    image.addEventListener('error', () => {
+    window.loadPortfolioImage(image, photo.src, () => {
       frame.classList.add('unavailable-photo');
       image.hidden = true;
       const message = document.createElement('span');
       message.textContent = 'Image could not be loaded';
       frame.append(message);
-    }, { once: true });
+    });
     frame.append(image);
     if (project) {
       const caption = document.createElement('span');
@@ -218,13 +217,19 @@
   viewer.innerHTML = '<button class="viewer-close" type="button" aria-label="Close photograph viewer">×</button><button class="viewer-previous" type="button" aria-label="Previous photograph">‹</button><figure><img alt=""><figcaption></figcaption></figure><button class="viewer-next" type="button" aria-label="Next photograph">›</button>';
   document.body.append(viewer);
   let viewerPhotos = [], viewerIndex = 0, viewerTrigger, viewerLabel;
+  let cancelViewerImage;
   const viewerImage = viewer.querySelector('img');
   const viewerCaption = viewer.querySelector('figcaption');
   const viewerPrevious = viewer.querySelector('.viewer-previous');
   const viewerNext = viewer.querySelector('.viewer-next');
   function showViewerPhoto() {
     const photo = viewerPhotos[viewerIndex];
-    viewerImage.src = photo.src;
+    cancelViewerImage?.();
+    viewerImage.hidden = false;
+    cancelViewerImage = window.loadPortfolioImage(viewerImage, photo.src, () => {
+      viewerImage.hidden = true;
+      viewerCaption.textContent = `${viewerLabel} · Image could not be loaded`;
+    });
     viewerImage.alt = photo.title || `${viewerLabel} — photograph ${viewerIndex + 1}`;
     viewerCaption.textContent = `${viewerLabel} · ${viewerIndex + 1} / ${viewerPhotos.length}`;
     viewerPrevious.disabled = viewerIndex === 0;
@@ -256,6 +261,7 @@
   });
   viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
   viewer.addEventListener('close', () => {
+    cancelViewerImage?.();
     document.body.classList.remove('viewer-open');
     viewerTrigger?.focus({ preventScroll: true });
   });
