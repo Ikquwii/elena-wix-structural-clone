@@ -77,7 +77,7 @@
     viewport.tabIndex = 0;
     viewport.setAttribute('role', 'region');
     viewport.setAttribute('aria-label', `${label}. Scroll horizontally to view all photographs.`);
-    const minimum = () => mobile.matches ? 0 : initialOffset;
+    const minimum = () => mobile.matches ? 0 : typeof initialOffset === 'function' ? initialOffset() : initialOffset;
     const maximum = () => Math.max(0, viewport.scrollWidth - viewport.clientWidth);
     const sync = () => {
       previous.disabled = viewport.scrollLeft <= minimum() + 1;
@@ -108,8 +108,15 @@
         viewport.scrollLeft += delta;
       }
     }, { passive: false });
-    if (initialOffset && !mobile.matches) viewport.scrollLeft = initialOffset;
-    new ResizeObserver(sync).observe(viewport);
+    let previousMinimum = minimum();
+    viewport.scrollLeft = previousMinimum;
+    new ResizeObserver(() => {
+      const nextMinimum = minimum();
+      // Keep the same gallery position when its edge moves across the window.
+      viewport.scrollLeft += nextMinimum - previousMinimum;
+      previousMinimum = nextMinimum;
+      sync();
+    }).observe(viewport);
     sync();
   }
 
@@ -123,6 +130,10 @@
     shell.style.setProperty('--row-gap', `${row.gap}px`);
     shell.style.setProperty('--row-before', `${row.before}px`);
     shell.style.setProperty('--row-inset', `${Math.max(0, row.start)}px`);
+    if (row.viewportWidth) {
+      shell.style.setProperty('--row-left', `max(0px, calc((100% - 1280px) / 2 + ${row.start}px))`);
+      shell.style.setProperty('--row-right', `max(0px, calc((100% - 1280px) / 2 + ${1280 - row.start - row.viewportWidth}px))`);
+    }
     const viewport = document.createElement('div');
     viewport.className = 'row-viewport';
     const strip = document.createElement('div');
@@ -137,7 +148,8 @@
     shell.append(viewport);
     section.append(shell);
     addControls(shell, viewport, `${labels[row.section]}, row ${rowIndex + 1}`, () =>
-      strip.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(strip).gap), Math.max(0, -row.start));
+      strip.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(strip).gap),
+      () => row.viewportWidth ? Math.max(0, -((shell.clientWidth - 1280) / 2 + row.start)) : 0);
   });
 
   data.layouts.forEach(layout => {
