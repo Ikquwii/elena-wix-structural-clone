@@ -29,6 +29,7 @@ body { background: #fff; }
 .measured-layout { position: relative; margin-top: var(--layout-before); margin-inline: 40px; }
 .layout-board { position: relative; width: 100%; aspect-ratio: var(--board-width) / var(--board-height); }
 .layout-board .photo-frame { position: absolute; }
+.mobile-standalone { display: none; }
 .mixed { margin-inline: 0; }
 .mixed .layout-viewport { overflow: auto hidden; scrollbar-width: none; overscroll-behavior-x: contain; }
 .mixed .layout-board { width: calc(var(--board-width) * 1px); height: calc(var(--board-height) * 1px); aspect-ratio: auto; }
@@ -63,28 +64,61 @@ body { background: #fff; }
   .row-strip .photo-frame { flex-basis: calc(var(--frame-width) * .8); width: calc(var(--frame-width) * .8); }
 }
 @media (max-width: 700px) {
-  #fashion-weeks .section-heading, #commercial .section-heading, #editorials .section-heading { padding: 40px 18px 28px; }
-  #latest-projects .section-heading { padding: 48px 20px 30px; }
-  #latest-projects .section-heading p { margin-top: 8px; }
-  .photo-row { margin-top: 20px; }
-  .photo-row:first-child { margin-top: 0; }
-  .row-viewport { margin-inline: 14px; }
-  .row-strip { height: clamp(300px, 102vw, 480px); gap: 10px; }
-  .row-strip .photo-frame { flex-basis: auto; width: auto; aspect-ratio: var(--frame-ratio); }
-  .row-arrow { width: 32px; height: 44px; font-size: 30px; }
-  .row-previous { left: 14px; }
-  .row-next { right: 14px; }
-  .gray-row { margin-top: 20px; padding-block: 14px; }
-  .measured-layout { margin-inline: 14px; margin-top: 24px; }
-  .mixed { margin-inline: 0; }
-  .mixed .layout-viewport { margin-inline: 14px; }
-  .mixed .layout-board { width: calc(var(--board-width) * .64px); height: calc(var(--board-height) * .64px); }
-  #latest-gallery { padding: 0 0 48px; }
-  .latest-board { display: flex; align-items: start; gap: 16px; width: 100%; padding-inline: 20px; aspect-ratio: auto; overflow: auto hidden; scrollbar-width: none; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
-  .latest-board .photo-frame { position: relative; inset: auto; flex: 0 0 82%; width: 82%; height: auto; aspect-ratio: var(--card-ratio); scroll-snap-align: center; }
-  .project-caption { inset: auto 0 0; display: block; padding: 28px 14px 14px; background: linear-gradient(transparent, rgb(0 0 0 / .6)); font-size: 22px; }
-  .latest-slider .row-previous { left: 20px; }
-  .latest-slider .row-next { right: 20px; }
+  /* Wix's phone composition uses a 320-unit grid, scaled to the screen width. */
+  :root { --source-unit: .3125vw; }
+  #fashion-weeks .section-heading, #commercial .section-heading, #editorials .section-heading {
+    position: relative; gap: 0; padding-inline: calc(10 * var(--source-unit));
+  }
+  #fashion-weeks .section-heading { padding-block: calc(16 * var(--source-unit)) calc(24 * var(--source-unit)); background: #000001; color: #fff; }
+  #commercial .section-heading { padding-block: calc(4 * var(--source-unit)) calc(6 * var(--source-unit)); background: #e6e6e6; }
+  #editorials .section-heading { padding-block: calc(16 * var(--source-unit)); background: #e6e6e6; }
+  #fashion-weeks .section-heading h2, #commercial .section-heading h2, #editorials .section-heading h2 {
+    width: calc(100% - 28px); max-width: none; font-size: calc(31 * var(--source-unit)); line-height: 1;
+  }
+  #editorials .section-heading p { margin-top: calc(8 * var(--source-unit)); font-size: calc(14 * var(--source-unit)); }
+  .portfolio-section .copy-link { position: absolute; right: calc(4 * var(--source-unit)); top: calc(8 * var(--source-unit)); width: 24px; height: 24px; font-size: 14px; }
+  #fashion-weeks .copy-link { color: #fff; border-color: #777; }
+  .photo-row, .gray-row {
+    margin-top: 0;
+    padding-block: calc(var(--mobile-row-before) * var(--source-unit)) calc(var(--mobile-row-after) * var(--source-unit));
+    background: var(--mobile-row-background);
+  }
+  .row-viewport { margin-left: calc(var(--mobile-row-left) * var(--source-unit)); margin-right: calc(var(--mobile-row-right) * var(--source-unit)); }
+  .row-strip { height: calc(var(--mobile-row-height) * var(--source-unit)); gap: calc(var(--mobile-row-gap) * var(--source-unit)); }
+  .row-strip .photo-frame { flex: 0 0 calc(var(--mobile-frame-width) * var(--source-unit)); width: calc(var(--mobile-frame-width) * var(--source-unit)); aspect-ratio: auto; }
+  .photo-row .row-controls { top: calc(var(--mobile-row-before) * var(--source-unit)); bottom: calc(var(--mobile-row-after) * var(--source-unit)); }
+  .row-arrow { width: calc(24 * var(--source-unit)); height: calc(40 * var(--source-unit)); background: transparent; color: #fff; font-size: 0; padding: 0; }
+  .row-arrow::before { content: ''; width: calc(12 * var(--source-unit)); height: calc(12 * var(--source-unit)); border-top: 2px solid; border-right: 2px solid; transform: rotate(45deg); }
+  .row-previous { left: calc(var(--mobile-row-left, 10) * var(--source-unit)); }
+  .row-previous::before { transform: rotate(-135deg); }
+  .row-next { right: calc(max(5, var(--mobile-row-right, 10)) * var(--source-unit)); }
+  .measured-layout {
+    margin: 0;
+    padding-block: calc(var(--mobile-layout-before) * var(--source-unit)) calc(var(--mobile-layout-after) * var(--source-unit));
+    background: var(--mobile-layout-background);
+  }
+  .measured-layout .layout-viewport { margin-inline: calc(10 * var(--source-unit)); }
+  .measured-layout .layout-board { width: calc(var(--mobile-board-width) * var(--source-unit)); height: calc(var(--mobile-board-height) * var(--source-unit)); aspect-ratio: auto; }
+  .layout-board .photo-frame {
+    --layout-frame-left: calc(var(--mobile-frame-left) * var(--source-unit));
+    --layout-frame-top: calc(var(--mobile-frame-top) * var(--source-unit));
+    --layout-frame-width: calc(var(--mobile-frame-width) * var(--source-unit));
+    --layout-frame-height: calc(var(--mobile-frame-height) * var(--source-unit));
+  }
+  .mosaic { padding-bottom: calc(7 * var(--source-unit)); }
+  .spreads { padding-top: 0; }
+  .mixed { padding-top: calc(8 * var(--source-unit)); }
+  .mixed .row-controls { top: calc(201 * var(--source-unit)); }
+  .mobile-standalone { display: block; margin-inline: calc(10 * var(--source-unit)); width: calc(300 * var(--source-unit)); height: calc(var(--mobile-banner-height) * var(--source-unit)); }
+  .spreads .mobile-standalone { margin-bottom: calc(5 * var(--source-unit)); }
+  .mixed .mobile-standalone { margin-bottom: calc(9 * var(--source-unit)); }
+  #latest-projects .section-heading { position: relative; gap: 0; padding: calc(24 * var(--source-unit)) calc(20 * var(--source-unit)) calc(36 * var(--source-unit)); }
+  #latest-projects .section-heading h2 { max-width: none; width: 100%; font-size: calc(28 * var(--source-unit)); line-height: calc(34 * var(--source-unit)); }
+  #latest-projects .section-heading p { margin: calc(16 * var(--source-unit)) 0 0; font-family: var(--serif); font-size: calc(16 * var(--source-unit)); line-height: 1.4; }
+  #latest-gallery { padding: 0 0 calc(20 * var(--source-unit)); }
+  .latest-board { display: flex; flex-direction: column; gap: calc(20 * var(--source-unit)); width: 100%; padding-inline: calc(20 * var(--source-unit)); aspect-ratio: auto; }
+  .latest-board .photo-frame { position: relative; inset: auto; flex: none; width: 100%; height: calc(var(--mobile-card-height) * var(--source-unit)); aspect-ratio: auto; }
+  .project-caption { font-size: calc(20 * var(--source-unit)); }
   .photo-viewer { padding: 58px 36px 24px; }
   .photo-viewer button { width: 34px; }
   .viewer-previous { left: 0; }
