@@ -104,7 +104,8 @@ check([p['id'] for p in data['latest']] == [p['id'] for p in manifest['latest']]
 for photo, source in zip(data['latest'], manifest['latest']):
     check(all(photo.get(k) == v for k, v in source.items()), f'Latest {source["id"]}: source metadata/link changed')
 
-photos = [manifest['hero']] + [p for g in manifest['galleries'] for p in g['items']] + manifest['latest']
+photos = ([manifest['hero']] + [p for g in manifest['galleries'] for p in g['items']]
+          + manifest['latest'] + [p['photo'] for p in data['mobileStandalone']])
 missing = []
 checked = set()
 for photo in photos:

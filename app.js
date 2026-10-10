@@ -129,6 +129,12 @@
     shell.style.setProperty('--row-gap', `${row.gap}px`);
     shell.style.setProperty('--row-before', `${row.before}px`);
     shell.style.setProperty('--row-inset', `${Math.max(0, row.start)}px`);
+    for (const [key, value] of Object.entries({ height: row.mobile.height, gap: row.mobile.gap,
+      left: row.mobile.x, right: Math.max(0, 320 - row.mobile.x - row.mobile.width),
+      before: row.mobile.before, after: row.mobile.after })) {
+      shell.style.setProperty(`--mobile-row-${key}`, value);
+    }
+    shell.style.setProperty('--mobile-row-background', row.mobile.background);
     if (row.viewportWidth) {
       shell.style.setProperty('--row-left', `max(0px, calc((100% - 1280px) / 2 + ${row.start}px))`);
       shell.style.setProperty('--row-right', `max(0px, calc((100% - 1280px) / 2 + ${1280 - row.start - row.viewportWidth}px))`);
@@ -141,6 +147,7 @@
       const frame = makePhoto(photo, index, row.items, labels[row.section]);
       frame.style.setProperty('--frame-width', `${photo.frameWidth}px`);
       frame.style.setProperty('--frame-ratio', photo.frameWidth / photo.frameHeight);
+      frame.style.setProperty('--mobile-frame-width', photo.mobileFrameWidth);
       strip.append(frame);
     });
     viewport.append(strip);
@@ -157,16 +164,39 @@
     shell.dataset.gallery = layout.id;
     shell.dataset.photoCount = layout.items.length;
     shell.style.setProperty('--layout-before', `${layout.before}px`);
+    shell.style.setProperty('--mobile-layout-before', layout.mobile.before);
+    shell.style.setProperty('--mobile-layout-after', layout.mobile.after);
+    shell.style.setProperty('--mobile-layout-background', layout.mobile.background);
+    // Wix places these two images outside its galleries, only on the phone layout.
+    const banner = data.mobileStandalone.find(photo =>
+      photo.id === (layout.kind === 'spreads' ? 'comp-m0qetcy5' : layout.kind === 'mixed' ? 'comp-m1rtvyf5' : ''));
+    if (banner) {
+      const frame = makePhoto(banner.photo, 0, [banner.photo], labels.editorials);
+      frame.classList.add('mobile-standalone');
+      frame.style.setProperty('--mobile-banner-height', banner.height);
+      shell.append(frame);
+    }
     const viewport = document.createElement('div');
     viewport.className = 'layout-viewport';
     const board = document.createElement('div');
     board.className = 'layout-board';
     board.style.setProperty('--board-width', layout.width);
     board.style.setProperty('--board-height', layout.height);
+    board.style.setProperty('--mobile-board-width', layout.kind === 'mixed'
+      ? Math.max(...layout.items.map(photo => photo.mobileFrame[0] + photo.mobileFrame[2])) : layout.mobile.width);
+    board.style.setProperty('--mobile-board-height', layout.mobile.height);
     layout.items.forEach((photo, index) => {
       const frame = makePhoto(photo, index, layout.items, labels.editorials);
       const [x, y, width, height] = photo.frame;
-      Object.assign(frame.style, { left: `${x/layout.width*100}%`, top: `${y/layout.height*100}%`, width: `${width/layout.width*100}%`, height: `${height/layout.height*100}%` });
+      Object.assign(frame.style, {
+        left: `var(--layout-frame-left, ${x/layout.width*100}%)`,
+        top: `var(--layout-frame-top, ${y/layout.height*100}%)`,
+        width: `var(--layout-frame-width, ${width/layout.width*100}%)`,
+        height: `var(--layout-frame-height, ${height/layout.height*100}%)`
+      });
+      for (const [key, value] of ['left', 'top', 'width', 'height'].map((key, i) => [key, photo.mobileFrame[i]])) {
+        frame.style.setProperty(`--mobile-frame-${key}`, value);
+      }
       board.append(frame);
     });
     viewport.append(board);
@@ -185,31 +215,13 @@
     card.style.setProperty('--card-w', `${width/1200*100}%`);
     card.style.setProperty('--card-h', `${height/1884*100}%`);
     card.style.setProperty('--card-ratio', width/height);
+    card.style.setProperty('--mobile-card-height', photo.mobileHeight);
     latestBoard.append(card);
   });
   const latestSlider = document.createElement('div');
   latestSlider.className = 'latest-slider';
   latestSlider.append(latestBoard);
   document.querySelector('#latest-gallery').append(latestSlider);
-  const latestStep = () => latestBoard.firstElementChild.getBoundingClientRect().width + 16;
-  addControls(latestSlider, latestBoard, 'Latest Projects', latestStep);
-  let latestFrame = 0;
-  function sizeLatestSlide() {
-    if (!mobile.matches) {
-      latestBoard.style.removeProperty('height');
-      return;
-    }
-    const index = Math.min(data.latest.length - 1, Math.round(latestBoard.scrollLeft / latestStep()));
-    const card = latestBoard.children[index];
-    const ratio = data.latest[index].frame[2] / data.latest[index].frame[3];
-    latestBoard.style.height = `${card.getBoundingClientRect().width / ratio}px`;
-  }
-  latestBoard.addEventListener('scroll', () => {
-    cancelAnimationFrame(latestFrame);
-    latestFrame = requestAnimationFrame(sizeLatestSlide);
-  }, { passive: true });
-  window.addEventListener('resize', sizeLatestSlide, { passive: true });
-  sizeLatestSlide();
 
   const viewer = document.createElement('dialog');
   viewer.className = 'photo-viewer';
