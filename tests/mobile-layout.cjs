@@ -36,7 +36,9 @@ const near = (actual, expected, label) => assert.ok(Math.abs(actual - expected) 
       // Load offscreen frames too, so screenshots and asset checks cover complete galleries.
       await page.locator('img[src]').evaluateAll(images => images.forEach(image => { image.loading = 'eager'; }));
       await page.waitForFunction(() => [...document.querySelectorAll('img[src]')].every(image => image.complete && image.naturalWidth > 0));
-      await page.locator('img[src]').evaluateAll(images => Promise.all(images.map(image => image.decode())));
+      await page.locator('img[src]').evaluateAll(async images => {
+        for (const image of images) await image.decode();
+      });
       const scale = width / source.baseWidth;
       assert.equal(await page.locator('.publication-marquee').count(), 2);
       assert.equal(await page.locator('.about-portrait').count(), 1);
