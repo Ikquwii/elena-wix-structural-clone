@@ -63,10 +63,10 @@ a.contact-item:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 700px) {
   .hero { min-height: 0; aspect-ratio: auto; background: #000001; }
   #hero-image { position: relative; display: block; height: 47.5vw; object-position: center top; }
-  .hero-copy { position: relative; left: auto; top: auto; bottom: auto; width: 100%; transform: none; padding: 0 20px 22px; }
-  .hero-copy h1 { font-size: clamp(14px, 4.375vw, 24px); line-height: 1.2; }
-  .portfolio-label { margin-top: 4px; font-size: clamp(18px, 5.625vw, 30px); }
-  .publications { max-width: 390px; margin-top: 14px; font-size: 12px; }
+  .hero-copy { position: relative; left: auto; top: auto; bottom: auto; width: 100%; min-height: calc(220 * var(--source-unit)); display: flex; flex-direction: column; justify-content: center; transform: none; padding: calc(32 * var(--source-unit)) calc(20 * var(--source-unit)) calc(36 * var(--source-unit)); }
+  .hero-copy h1 { font-size: calc(24 * var(--source-unit)); line-height: 1.2; }
+  .portfolio-label { margin-top: calc(8 * var(--source-unit)); font-size: calc(24 * var(--source-unit)); }
+  .publications { max-width: 390px; margin-top: calc(18 * var(--source-unit)); font-size: 12px; }
   .section-index { padding-top: 30px; padding-bottom: 32px; }
   .section-index a { padding: 17px 0; font-size: 23px; }
   .section-heading { padding: 36px 18px 28px; gap: 8px; }
