@@ -41,8 +41,6 @@ body { background: #fff; }
 .photo-frame:hover .project-caption, .photo-frame:focus-visible .project-caption { opacity: 1; }
 .manual-copy-link { flex: 1 0 100%; max-width: 550px; padding: 12px; border: 1px solid #777; font: 14px var(--sans); }
 .publication-marquee { position: relative; }
-.marquee-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border: 1px solid #44494e; border-radius: 50%; background: #05080c; color: #fff; cursor: pointer; }
-.publication-marquee.is-paused .publication-marquee-track { animation-play-state: paused; }
 .about-contact { position: relative; }
 .about-copy-link { position: absolute; right: 20px; top: 20px; color: #f1f1ed; border-color: #6c7072; }
 .about-copy-link:hover { background: #383b3d; }

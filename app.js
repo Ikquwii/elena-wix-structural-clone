@@ -302,22 +302,6 @@
     });
   });
 
-  document.querySelectorAll('.publication-marquee').forEach(band => {
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'marquee-toggle';
-    toggle.textContent = 'Ⅱ';
-    toggle.setAttribute('aria-label', 'Pause publication strip');
-    toggle.setAttribute('aria-pressed', 'false');
-    toggle.addEventListener('click', () => {
-      const paused = band.classList.toggle('is-paused');
-      toggle.textContent = paused ? '▷' : 'Ⅱ';
-      toggle.setAttribute('aria-label', paused ? 'Play publication strip' : 'Pause publication strip');
-      toggle.setAttribute('aria-pressed', String(paused));
-    });
-    band.append(toggle);
-  });
-
   async function restoreAnchor() {
     await document.fonts.ready;
     if (window.location.hash) {
