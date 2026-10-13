@@ -78,8 +78,27 @@ const near = (actual, expected, label) => assert.ok(Math.abs(actual - expected) 
           near(cards[i].h / scale, source.latest.heights[i], `Latest ${i} height`);
           if (i) near((cards[i].y - cards[i - 1].y - cards[i - 1].h) / scale, 20, `Latest ${i} gap`);
         }
-        const hero = await page.locator('#hero-image').boundingBox();
-        near(hero.height / scale, 152, 'Landscape hero height');
+        const hero = await page.locator('.hero').boundingBox();
+        const image = await page.locator('#hero-image').boundingBox();
+        near(hero.height, 900, 'Hero fills the phone viewport');
+        near(image.height, hero.height, 'Photo fills the hero');
+        near(image.width, width, 'Photo fills the phone width');
+        const edge = await page.locator('body').evaluate(e => {
+          const s = getComputedStyle(e, '::after');
+          return { position: s.position, left: s.borderLeftWidth, right: s.borderRightWidth,
+            color: s.borderLeftColor, pointer: s.pointerEvents };
+        });
+        assert.deepEqual(edge, { position: 'fixed', left: '4px', right: '4px',
+          color: 'rgb(0, 0, 0)', pointer: 'none' }, 'Black mobile edges must stay visible without blocking photos');
+        for (const selector of ['h1', '.portfolio-label', '.publications']) {
+          const text = await page.locator('.hero-copy ' + selector).boundingBox();
+          assert.ok(text.x >= image.x && text.x + text.width <= image.x + image.width + 1,
+            `${selector} must fit inside the photograph horizontally`);
+          assert.ok(text.y >= image.y && text.y + text.height <= image.y + image.height,
+            `${selector} must overlay the photograph`);
+        }
+        assert.ok(await page.locator('.hero-copy h1').evaluate(e => e.scrollWidth <= e.clientWidth), 'Full name must fit on the photograph');
+        if (output && width === 390) await page.locator('.hero').screenshot({ path: path.join(output, 'mobile-hero.png') });
         assert.equal(await page.locator('.mobile-standalone:visible').count(), 2);
         const placement = await page.evaluate(() => {
           const box = selector => { const b = document.querySelector(selector).getBoundingClientRect(); return { top: b.top, bottom: b.bottom, height: b.height }; };
