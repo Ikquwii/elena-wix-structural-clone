@@ -48,7 +48,7 @@ section, nav { scroll-margin-top: 24px; }
 .about-contact { padding: 76px clamp(24px, 4vw, 72px) 0; background: #181a1b; color: #f1f1ed; }
 .about-grid { display: grid; grid-template-columns: 1.1fr .8fr 1fr; align-items: center; gap: clamp(28px, 4vw, 72px); max-width: 1500px; margin-inline: auto; }
 .about-grid h2 { margin: 0; font-size: clamp(20px, 2.55vw, 42px); font-weight: 700; line-height: 1.12; letter-spacing: -.045em; text-align: center; white-space: nowrap; }
-.about-portrait { width: 100%; aspect-ratio: 3 / 4; background: #a6a6a2; }
+.about-portrait { display: block; width: 100%; height: auto; }
 .about-bio { margin: 0; font-size: clamp(15px, 1.3vw, 20px); font-weight: 300; line-height: 1.65; }
 .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1500px; margin: 66px auto 0; padding: 30px 0 38px; border-top: 1px solid #535658; }
 .contact-item { display: flex; flex-direction: column; gap: 11px; font-size: 14px; line-height: 1.5; text-decoration: none; overflow-wrap: anywhere; }

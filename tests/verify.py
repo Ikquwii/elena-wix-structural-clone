@@ -77,7 +77,10 @@ check(contacts[1].attrs.get('href') == 'tel:+34608418933', 'Phone not clickable'
 check(contacts[2].tag == 'a' and contacts[2].attrs.get('href', '').startswith('https://www.instagram.com/whiteusova'), 'Instagram not clickable')
 check(contacts[3].attrs.get('href') == 'mailto:elenawhiteusova@gmail.com', 'Email not clickable')
 portrait = doc.all(cls='about-portrait')
-check(len(portrait) == 1 and portrait[0].attrs.get('aria-label') == 'Portrait placeholder' and not portrait[0].all('img'), 'Portrait placeholder changed')
+check(len(portrait) == 1 and portrait[0].tag == 'img' and portrait[0].attrs.get('alt') == 'Elena Belousova', 'Expected the supplied portrait in About & Contact')
+with Image.open(ROOT / portrait[0].attrs['src']) as image:
+    image.load()
+    check(image.size == (int(portrait[0].attrs['width']), int(portrait[0].attrs['height'])), 'Portrait dimensions must preserve the complete supplied photograph')
 for sheet in ['shell.css', 'gallery.css']:
     css = (ROOT / sheet).read_text()
     check('@media (max-width: 700px)' in css and 'prefers-reduced-motion' in css, f'{sheet}: missing mobile/reduced-motion rules')
